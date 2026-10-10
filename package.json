@@ -1,0 +1,37 @@
+{
+  "name": "llm-api-pricing",
+  "version": "1.0.0",
+  "description": "Open, citable dataset of LLM API list prices, corrected for prompt caching, batch tiers and long-context tiering.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://rabayid.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rabayid/llm-api-pricing.git"
+  },
+  "keywords": [
+    "llm",
+    "pricing",
+    "openai",
+    "anthropic",
+    "google",
+    "gemini",
+    "deepseek",
+    "xai",
+    "dataset",
+    "cost"
+  ],
+  "files": [
+    "data",
+    "schema",
+    "scripts"
+  ],
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "crossover": "node scripts/crossover.mjs",
+    "test": "node scripts/validate.mjs && node scripts/crossover.mjs > /dev/null"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

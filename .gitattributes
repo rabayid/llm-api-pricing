@@ -1,0 +1,7 @@
+# Normalize line endings to LF in the repository regardless of contributor OS.
+# Prevents spurious whole-file diffs when a Windows and a Linux editor touch the
+# same file, and keeps the JSON byte-identical across checkouts.
+* text=auto eol=lf
+
+*.png binary
+*.ico binary

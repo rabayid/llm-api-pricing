@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rabayid.com/schema/pricing.schema.json",
+  "title": "LLM API Pricing Dataset",
+  "description": "List prices for LLM API models, corrected for prompt caching, batch tiers and long-context tiering. All prices are USD per 1,000,000 tokens.",
+  "type": "object",
+  "required": [
+    "dataset",
+    "publisher",
+    "homepage",
+    "prices_verified",
+    "currency",
+    "unit",
+    "model_count",
+    "providers",
+    "provider_pricing_urls",
+    "models"
+  ],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri" },
+    "dataset": { "type": "string", "minLength": 1 },
+    "publisher": { "type": "string", "minLength": 1 },
+    "homepage": { "type": "string", "format": "uri" },
+    "human_page": { "type": "string", "format": "uri" },
+    "machine_page": { "type": "string", "format": "uri" },
+    "prices_verified": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable date the rates were last checked against the providers."
+    },
+    "generated": { "type": "string", "description": "ISO date the file was generated." },
+    "currency": { "const": "USD" },
+    "unit": { "type": "string", "minLength": 1 },
+    "model_count": { "type": "integer", "minimum": 1 },
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "provider_pricing_urls": {
+      "type": "object",
+      "description": "Map of provider name to the provider's own published pricing page.",
+      "additionalProperties": { "type": "string", "format": "uri" }
+    },
+    "field_notes": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "accuracy_note": { "type": "string" },
+    "models": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/model" }
+    }
+  },
+  "$defs": {
+    "rates": {
+      "type": "object",
+      "required": ["input", "output"],
+      "properties": {
+        "input": { "type": "number", "exclusiveMinimum": 0 },
+        "cached_input": { "type": ["number", "null"], "minimum": 0 },
+        "cache_write": { "type": ["number", "null"], "minimum": 0 },
+        "output": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "long_context_tier": {
+      "type": "object",
+      "required": ["threshold_tokens", "usd_per_million_tokens"],
+      "properties": {
+        "threshold_tokens": { "type": "integer", "exclusiveMinimum": 0 },
+        "usd_per_million_tokens": { "$ref": "#/$defs/rates" }
+      },
+      "additionalProperties": false
+    },
+    "model": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "provider",
+        "context_window_tokens",
+        "usd_per_million_tokens",
+        "supports_batch_api",
+        "pricing_url"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "provider": { "type": "string", "minLength": 1 },
+        "context_window_tokens": { "type": "integer", "exclusiveMinimum": 0 },
+        "usd_per_million_tokens": { "$ref": "#/$defs/rates" },
+        "supports_batch_api": { "type": "boolean" },
+        "promotional": { "type": "boolean" },
+        "promotion_ends": { "type": "string" },
+        "flagship": { "type": "boolean" },
+        "long_context_tier": { "$ref": "#/$defs/long_context_tier" },
+        "pricing_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
